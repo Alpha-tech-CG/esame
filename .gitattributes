@@ -1,0 +1,5 @@
+# Fins de ligne identiques (LF) sur Windows, Mac et Linux
+* text=auto eol=lf
+
+# Fichiers binaires : ne jamais les modifier
+*.png binary
