@@ -24,6 +24,8 @@ développer : le front-end communique directement avec Firebase.
   flottante sur mobile)
 - Installable comme application (PWA) et **consultable hors ligne** grâce à la
   persistance intégrée de Firestore
+- **Bannière « Installer BudgetShare »** qui apparaît puis disparaît toute seule
+  (bouton d'installation sur Android/ordinateur, explication sur iPhone)
 
 **Fonctionnalités avancées**
 

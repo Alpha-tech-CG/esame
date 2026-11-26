@@ -11,7 +11,7 @@
 
 // Nom + version du cache. On incrémente la version (v1 -> v2...)
 // à chaque modification des fichiers pour forcer la mise à jour.
-const CACHE_NAME = "budgetshare-v6";
+const CACHE_NAME = "budgetshare-v7";
 
 // Liste des fichiers composant le « squelette » de l'application.
 // Ce sont eux qui seront disponibles hors ligne.
@@ -28,6 +28,7 @@ const APP_SHELL = [
   "./js/budgets.js",
   "./js/groups.js",
   "./js/export.js",
+  "./js/install.js",
   "./manifest.json",
   "./css/reset.css",
   "./css/styles.css",

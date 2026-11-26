@@ -228,6 +228,25 @@
     bottom: calc(5.75rem + env(safe-area-inset-bottom));
   }
 
+  /* Pareil pour la bannière d'installation, sur les pages avec onglets */
+  body:has(.tabbar) .install-banner {
+    bottom: calc(5.75rem + env(safe-area-inset-bottom));
+  }
+
+  /* Sur petit écran : texte plus court, bouton sur toute la largeur */
+  .install-banner {
+    flex-wrap: wrap;
+  }
+
+  .install-text {
+    flex-basis: calc(100% - 46px - 30px - 1.6rem);
+  }
+
+  .install-ok {
+    width: 100%;
+    order: 3;
+  }
+
   /* Ligne de dépense sur 2 rangées : icône | texte | montant,
      puis les boutons modifier/supprimer alignés à droite dessous */
   .expense-item {

@@ -889,6 +889,118 @@ body {
 }
 
 /* ============================================================
+   Bannière d'installation de la PWA (voir js/install.js)
+   Elle glisse depuis le bas, puis repart toute seule.
+   ============================================================ */
+
+.install-banner {
+  position: fixed;
+  left: 50%;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom));
+  z-index: 1100;
+  width: calc(100% - 2rem);
+  max-width: 470px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 0.9rem;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  /* Position de départ : cachée sous l'écran */
+  opacity: 0;
+  transform: translate(-50%, 140%);
+  transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2), opacity 0.3s ease;
+}
+
+/* État visible : la bannière remonte (avec un léger rebond) */
+.install-banner.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.install-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  flex-shrink: 0;
+}
+
+.install-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+
+.install-text strong {
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.install-text b {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.install-text .lucide {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  vertical-align: -2px;
+  color: var(--color-primary);
+}
+
+.install-ok {
+  flex-shrink: 0;
+}
+
+.install-close {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.install-close .lucide {
+  width: 15px;
+  height: 15px;
+}
+
+/* Barre de temps restant avant la disparition */
+.install-timer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--color-primary);
+  transform-origin: left;
+  animation-name: install-timer;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+/* Souris sur la bannière : le temps s'arrête */
+.install-banner.paused .install-timer {
+  animation-play-state: paused;
+}
+
+@keyframes install-timer {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+/* ============================================================
    Fonctionnalités avancées : Budgets, Groupes, Alertes
    ============================================================ */
 
