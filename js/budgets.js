@@ -156,15 +156,28 @@ function renderCategoryBudgets() {
         <button type="submit" class="btn btn-icon btn-dark" title="Enregistrer" aria-label="Enregistrer">
           <i data-lucide="check"></i>
         </button>
+        <button type="button" class="btn btn-icon btn-danger" data-delete
+                title="Supprimer la catégorie" aria-label="Supprimer la catégorie ${escapeHtml(cat.name)}">
+          <i data-lucide="trash-2"></i>
+        </button>
       </div>
       <div class="progress"><div class="progress-bar"></div></div>
       <div class="progress-text"></div>
     `;
     setProgress(row.querySelector(".progress-bar"), row.querySelector(".progress-text"), spent, limit);
 
+    // Bouton poubelle : supprimer la catégorie.
+    row.querySelector("[data-delete]").addEventListener("click", () => onDeleteCategory(cat));
+
     row.addEventListener("submit", async (e) => {
       e.preventDefault();
       const value = row.querySelector(".budget-input").value;
+      // Champ vidé alors qu'il n'y avait pas de limite : rien à faire
+      // (supprimer un document qui n'existe pas serait refusé par Firestore).
+      if (!(Number(value) > 0) && !limit) {
+        toast(`Pas de limite pour « ${cat.name} »`);
+        return;
+      }
       try {
         await setCategoryBudget(cat.id, value);
         toast(value && Number(value) > 0 ? `Budget « ${cat.name} » enregistré` : `Limite « ${cat.name} » supprimée`, "success");
@@ -177,6 +190,28 @@ function renderCategoryBudgets() {
     box.appendChild(row);
   });
   refreshIcons();
+}
+
+// Supprime une catégorie (après confirmation).
+// - Les dépenses liées ne sont PAS supprimées : elles s'affichent
+//   ensuite en « Sans catégorie » (getExpenses ne trouve plus la catégorie).
+// - Sa limite de budget est supprimée aussi, pour ne pas laisser de
+//   donnée orpheline.
+async function onDeleteCategory(cat) {
+  const nbDepenses = BUD.expenses.filter((e) => e.category_id === cat.id).length;
+  const avertissement = nbDepenses
+    ? `\n\n${nbDepenses} dépense(s) de ce mois passeront en « Sans catégorie » (elles ne sont pas supprimées).`
+    : "";
+  if (!confirm(`Supprimer la catégorie « ${cat.name} » ?${avertissement}`)) return;
+
+  try {
+    if (BUD.catBudgets[cat.id]) await setCategoryBudget(cat.id, 0); // supprime la limite
+    await deleteCategory(cat.id);
+    toast(`Catégorie « ${cat.name} » supprimée`, "success");
+    await loadBudgetsPage();
+  } catch (err) {
+    toast("Erreur : " + err.message, "danger");
+  }
 }
 
 /* ========== Alertes ========== */

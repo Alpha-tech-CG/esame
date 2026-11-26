@@ -194,26 +194,6 @@ function setupOfflineBanner() {
   update();
 }
 
-/* ---------- Cache local (mode hors ligne) ---------- */
-
-// Sauvegarde des données dans le navigateur pour les relire hors ligne.
-function cacheSet(key, value) {
-  try {
-    localStorage.setItem("bs_" + key, JSON.stringify(value));
-  } catch (e) {
-    /* stockage plein ou indisponible : on ignore */
-  }
-}
-
-function cacheGet(key) {
-  try {
-    const raw = localStorage.getItem("bs_" + key);
-    return raw ? JSON.parse(raw) : null;
-  } catch (e) {
-    return null;
-  }
-}
-
 /* ---------- Service worker ---------- */
 
 // Enregistre le service worker (active la PWA + le hors ligne).

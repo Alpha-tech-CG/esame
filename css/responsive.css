@@ -200,8 +200,19 @@
     color: var(--text-muted);
   }
 
+  /* Ligne de catégorie sur 2 rangées : icône + nom, puis champ + boutons */
+  .budget-row-head {
+    flex-wrap: wrap;
+  }
+
+  .budget-row-name {
+    flex-basis: calc(100% - 56px);
+  }
+
   .budget-input {
-    width: 110px;
+    flex: 1;
+    width: auto;
+    min-width: 0; /* un champ a une largeur minimale par défaut : on l'autorise à rétrécir */
   }
 
   .split-row .input {

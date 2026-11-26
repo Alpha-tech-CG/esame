@@ -22,12 +22,3 @@ function parseTags(input) {
     ),
   ];
 }
-
-// (Optionnel) Liste tous les tags déjà utilisés par l'utilisateur,
-// en les extrayant de ses dépenses. Utile pour des suggestions.
-async function getAllTags() {
-  const expenses = await getExpenses();
-  const set = new Set();
-  expenses.forEach((e) => (e.tags || []).forEach((t) => set.add(t)));
-  return [...set].sort();
-}
