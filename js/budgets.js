@@ -20,11 +20,6 @@ const BUD = {
   setupOfflineBanner();
   highlightNav();
 
-  document.getElementById("logout-link").addEventListener("click", (e) => {
-    e.preventDefault();
-    logout();
-  });
-
   const { month, year } = currentMonthYear();
   document.getElementById("month-label").textContent = monthName(month) + " " + year;
 

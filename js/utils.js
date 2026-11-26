@@ -112,6 +112,7 @@ function requireAuth() {
         resolve(null);
       } else {
         ensureUserLookup(user); // pas besoin d'attendre
+        renderSidebarUser(user);
         resolve(user);
       }
     });
@@ -148,6 +149,25 @@ function currentUser() {
 async function logout() {
   await window.auth.signOut();
   window.location.href = "./login.html";
+}
+
+// Tout élément portant l'attribut data-logout (bouton de la barre
+// latérale, bouton du bandeau mobile...) déconnecte l'utilisateur.
+// Une seule règle pour toutes les pages (délégation d'événement).
+document.addEventListener("click", (e) => {
+  const bouton = e.target.closest("[data-logout]");
+  if (!bouton) return;
+  e.preventDefault();
+  logout();
+});
+
+// Affiche le nom et l'initiale de l'utilisateur en bas de la barre latérale.
+function renderSidebarUser(user) {
+  const nameEl = document.getElementById("user-name");
+  const avatarEl = document.getElementById("user-avatar");
+  const name = user.displayName || user.email || "";
+  if (nameEl) nameEl.textContent = name;
+  if (avatarEl) avatarEl.textContent = (name.trim()[0] || "?").toUpperCase();
 }
 
 /* ---------- Mode hors ligne ---------- */

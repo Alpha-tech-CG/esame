@@ -40,18 +40,7 @@ if (window.Chart) {
   setupOfflineBanner();
   highlightNav();
 
-  // Nom + initiale de l'utilisateur en bas de la barre latérale.
-  const name = user.displayName || user.email || "";
-  setText("user-name", name);
-  setText("user-avatar", (name.trim()[0] || "?").toUpperCase());
-
-  // Déconnexion (barre latérale + bouton mobile).
-  ["logout-link", "logout-mobile"].forEach((id) =>
-    el(id).addEventListener("click", (e) => {
-      e.preventDefault();
-      logout();
-    })
-  );
+  // (Nom de l'utilisateur et déconnexion : gérés par utils.js.)
 
   const { month, year } = currentMonthYear();
   setText("month-title", monthName(month) + " " + year);

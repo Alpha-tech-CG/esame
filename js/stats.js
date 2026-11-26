@@ -18,11 +18,6 @@ async function initStatsPage() {
   setupOfflineBanner();
   highlightNav();
 
-  document.getElementById("logout-link").addEventListener("click", (e) => {
-    e.preventDefault();
-    logout();
-  });
-
   // Sélecteur de mois (input type=month), par défaut le mois courant.
   const { month, year } = currentMonthYear();
   const monthInput = document.getElementById("stats-month");

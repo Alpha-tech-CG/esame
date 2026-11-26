@@ -750,6 +750,145 @@ body {
 }
 
 /* ============================================================
+   Mise en page de l'application : barre latérale à gauche
+   (commune à toutes les pages connectées)
+   ============================================================ */
+
+/* Fond gris clair derrière la barre latérale */
+.app-page {
+  background: #f3f5f8;
+}
+
+.dash-layout {
+  display: grid;
+  grid-template-columns: 228px 1fr;
+  min-height: 100vh;
+}
+
+/* ---------- Barre latérale ---------- */
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem;
+  background: #f3f5f8;
+}
+
+.sidebar .brand {
+  padding: 0 0.5rem;
+  margin-bottom: 2.25rem;
+}
+
+.side-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.side-nav a,
+.side-bottom a {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+/* Icône dans un rond blanc */
+.side-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+.side-icon .lucide {
+  width: 17px;
+  height: 17px;
+}
+
+.side-nav a:hover,
+.side-bottom a:hover {
+  color: var(--text);
+}
+
+/* Lien actif : rond bleu plein + fond blanc sur la ligne */
+.side-nav a.active {
+  background: #fff;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.side-nav a.active .side-icon {
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: none;
+}
+
+.side-bottom {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.side-user {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.88rem;
+  min-width: 0;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7fb0ff, var(--color-primary));
+  color: #fff;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.side-user-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- Zone de contenu (pages autres que le tableau de bord) ---------- */
+/* Même forme que le tableau de bord : panneau arrondi à gauche,
+   avec le fond « ciel » bleu clair. */
+.page-main {
+  min-width: 0;
+  border-radius: 28px 0 0 28px;
+  background:
+    linear-gradient(180deg, #bcd8f2 0px, #dcebf9 260px, #f3f8fd 540px, #ffffff 800px)
+    no-repeat,
+    #ffffff;
+}
+
+/* Bandeau du haut sur téléphone (logo + déconnexion) */
+.mobile-topbar {
+  display: none;
+}
+
+/* ============================================================
    Fonctionnalités avancées : Budgets, Groupes, Alertes
    ============================================================ */
 

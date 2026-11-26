@@ -18,7 +18,7 @@
   <!-- Mise en page propre au tableau de bord -->
   <link rel="stylesheet" href="./css/dashboard.css" />
 </head>
-<body class="dash-page">
+<body class="dash-page app-page">
   <div class="dash-layout">
 
     <!-- ===================== BARRE LATÉRALE ===================== -->
@@ -52,7 +52,7 @@
       </nav>
 
       <div class="side-bottom">
-        <a href="#" id="logout-link">
+        <a href="#" id="logout-link" data-logout>
           <span class="side-icon"><i data-lucide="log-out"></i></span>
           <span class="side-label">Déconnexion</span>
         </a>
@@ -79,7 +79,7 @@
         </div>
 
         <!-- Déconnexion accessible sur mobile (la barre latérale est cachée) -->
-        <a href="#" class="round-btn mobile-only" id="logout-mobile" title="Déconnexion">
+        <a href="#" class="round-btn mobile-only" id="logout-mobile" data-logout title="Déconnexion" aria-label="Déconnexion">
           <i data-lucide="log-out"></i>
         </a>
 

@@ -15,12 +15,34 @@
   }
 }
 
+/* Écran moyen : barre latérale réduite aux icônes */
+@media (max-width: 1180px) {
+  .dash-layout {
+    grid-template-columns: 84px 1fr;
+  }
+
+  .sidebar .brand-text,
+  .side-label,
+  .side-user-name {
+    display: none;
+  }
+
+  .sidebar .brand,
+  .side-nav a,
+  .side-bottom a,
+  .side-user {
+    justify-content: center;
+  }
+}
+
 /* Pages Budgets / Groupes : une seule colonne */
 @media (max-width: 900px) {
+  /* minmax(0, 1fr) : la colonne ne peut pas devenir plus large que
+     l'écran (avec « 1fr » seul, elle s'élargit selon son contenu). */
   .two-col,
   .two-col.equal,
   .groups-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -43,6 +65,42 @@
 
   .app-header {
     padding: 0.75rem 0.75rem 0;
+  }
+
+  /* Plus de barre latérale : la barre d'onglets du bas prend le relais */
+  .dash-layout {
+    display: block;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .page-main {
+    border-radius: 0;
+    min-height: 100vh;
+  }
+
+  /* Bandeau du haut : logo à gauche, déconnexion à droite */
+  .mobile-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0.75rem 0.75rem 0;
+    padding: 0.45rem 0.45rem 0.45rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: var(--shadow);
+  }
+
+  .topbar-logout {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--color-dark);
+    color: #fff;
   }
 
   /* On cache les liens du haut (remplacés par la barre d'onglets) */
@@ -196,6 +254,6 @@
 
   .expenses-layout > .card:first-child {
     position: sticky;
-    top: 6rem;
+    top: 1.5rem;
   }
 }

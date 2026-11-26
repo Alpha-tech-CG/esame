@@ -15,25 +15,63 @@
   <link rel="stylesheet" href="./css/styles.css" />
   <link rel="stylesheet" href="./css/responsive.css" />
 </head>
-<body id="stats-page">
-  <header class="app-header">
-    <div class="nav-pill">
+<body id="stats-page" class="app-page">
+  <div class="dash-layout">
+
+    <!-- ===================== BARRE LATÉRALE (commune à toutes les pages) ===================== -->
+    <aside class="sidebar">
       <a class="brand" href="./dashboard.html">
         <span class="brand-mark"><i data-lucide="wallet"></i></span>
-        BudgetShare
+        <span class="brand-text">BudgetShare</span>
       </a>
-      <nav class="nav">
-        <a href="./dashboard.html" title="Tableau de bord"><i data-lucide="layout-dashboard"></i><span class="nav-label">Tableau de bord</span></a>
-        <a href="./expenses.html" title="Dépenses"><i data-lucide="receipt"></i><span class="nav-label">Dépenses</span></a>
-        <a href="./budgets.html" title="Budgets"><i data-lucide="target"></i><span class="nav-label">Budgets</span></a>
-        <a href="./groups.html" title="Groupes"><i data-lucide="users"></i><span class="nav-label">Groupes</span></a>
-        <a href="./stats.html" title="Statistiques"><i data-lucide="chart-pie"></i><span class="nav-label">Statistiques</span></a>
+
+      <nav class="side-nav">
+        <a href="./dashboard.html">
+          <span class="side-icon"><i data-lucide="layout-dashboard"></i></span>
+          <span class="side-label">Tableau de bord</span>
+        </a>
+        <a href="./expenses.html">
+          <span class="side-icon"><i data-lucide="receipt"></i></span>
+          <span class="side-label">Dépenses</span>
+        </a>
+        <a href="./budgets.html">
+          <span class="side-icon"><i data-lucide="target"></i></span>
+          <span class="side-label">Budgets</span>
+        </a>
+        <a href="./groups.html">
+          <span class="side-icon"><i data-lucide="users"></i></span>
+          <span class="side-label">Groupes</span>
+        </a>
+        <a href="./stats.html">
+          <span class="side-icon"><i data-lucide="chart-pie"></i></span>
+          <span class="side-label">Statistiques</span>
+        </a>
       </nav>
-      <a href="#" id="logout-link" class="btn btn-dark btn-sm" title="Déconnexion">
-        <i data-lucide="log-out"></i><span class="btn-label">Déconnexion</span>
-      </a>
-    </div>
-  </header>
+
+      <div class="side-bottom">
+        <a href="#" id="logout-link" data-logout>
+          <span class="side-icon"><i data-lucide="log-out"></i></span>
+          <span class="side-label">Déconnexion</span>
+        </a>
+        <div class="side-user">
+          <span class="avatar" id="user-avatar">?</span>
+          <span class="side-user-name" id="user-name">…</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ===================== ZONE DE CONTENU ===================== -->
+    <div class="page-main">
+      <!-- Bandeau visible seulement sur téléphone (la barre latérale est cachée) -->
+      <header class="mobile-topbar">
+        <a class="brand" href="./dashboard.html">
+          <span class="brand-mark"><i data-lucide="wallet"></i></span>
+          BudgetShare
+        </a>
+        <a href="#" class="topbar-logout" data-logout title="Déconnexion" aria-label="Déconnexion">
+          <i data-lucide="log-out"></i>
+        </a>
+      </header>
 
   <main class="container">
     <section class="page-hero">
@@ -93,6 +131,9 @@
       </div>
     </section>
   </main>
+
+    </div>
+  </div>
 
   <nav class="tabbar">
     <a href="./dashboard.html"><i data-lucide="house"></i>Accueil</a>

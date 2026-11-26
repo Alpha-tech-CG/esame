@@ -11,7 +11,7 @@
 
 // Nom + version du cache. On incrémente la version (v1 -> v2...)
 // à chaque modification des fichiers pour forcer la mise à jour.
-const CACHE_NAME = "budgetshare-v5";
+const CACHE_NAME = "budgetshare-v6";
 
 // Liste des fichiers composant le « squelette » de l'application.
 // Ce sont eux qui seront disponibles hors ligne.

@@ -32,11 +32,6 @@ const $ = (id) => document.getElementById(id);
   setupOfflineBanner();
   highlightNav();
 
-  $("logout-link").addEventListener("click", (e) => {
-    e.preventDefault();
-    logout();
-  });
-
   $("ge-date").value = today();
 
   $("create-group-form").addEventListener("submit", onCreateGroup);
