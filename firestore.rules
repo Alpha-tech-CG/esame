@@ -1,0 +1,105 @@
+// ============================================================
+// firestore.rules — Règles de sécurité Firestore (BudgetShare)
+// ------------------------------------------------------------
+// À copier dans : Console Firebase > Firestore Database >
+// onglet « Règles » (Rules) > Publier.
+//
+// Principes :
+// - Données personnelles (catégories, dépenses, budgets) :
+//   accessibles uniquement par leur propriétaire (champ userId).
+// - Groupes : accessibles uniquement par leurs membres
+//   (liste memberIds du groupe).
+// Toutes ces vérifications sont faites PAR LE SERVEUR Firebase.
+// ============================================================
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // L'utilisateur est-il connecté ?
+    function estConnecte() {
+      return request.auth != null;
+    }
+
+    // Le document appartient-il à l'utilisateur connecté ?
+    function possede(data) {
+      return estConnecte() && request.auth.uid == data.userId;
+    }
+
+    // L'utilisateur connecté est-il membre du groupe gid ?
+    // (on va lire le document du groupe pour vérifier)
+    function estMembre(gid) {
+      return estConnecte() &&
+        request.auth.uid in get(/databases/$(database)/documents/groups/$(gid)).data.memberIds;
+    }
+
+    // --- Profils : chacun n'accède qu'au sien (id du doc = uid) ---
+    match /users/{uid} {
+      allow read, write: if estConnecte() && request.auth.uid == uid;
+    }
+
+    // --- Annuaire minimal pour ajouter un membre à un groupe ---
+    // id du document = e-mail en minuscules -> { uid, name, email }.
+    // On peut lire UN document si on connaît l'e-mail exact,
+    // mais pas lister l'annuaire (pas de « list »).
+    match /userLookup/{email} {
+      allow get: if estConnecte();
+      allow create, update: if estConnecte()
+        && request.resource.data.uid == request.auth.uid
+        && email == request.auth.token.email.lower();
+      allow delete: if estConnecte() && resource.data.uid == request.auth.uid;
+    }
+
+    // --- Catégories ---
+    match /categories/{id} {
+      allow read, delete: if possede(resource.data);
+      allow create:       if possede(request.resource.data);
+      allow update:       if possede(resource.data) && possede(request.resource.data);
+    }
+
+    // --- Dépenses personnelles ---
+    match /expenses/{id} {
+      allow read, delete: if possede(resource.data);
+      allow create:       if possede(request.resource.data);
+      allow update:       if possede(resource.data) && possede(request.resource.data);
+    }
+
+    // --- Budgets mensuels ---
+    match /budgets/{id} {
+      allow read, delete: if possede(resource.data);
+      allow create:       if possede(request.resource.data);
+      allow update:       if possede(resource.data) && possede(request.resource.data);
+    }
+
+    // --- Budgets par catégorie ---
+    match /category_budgets/{id} {
+      allow read, delete: if possede(resource.data);
+      allow create:       if possede(request.resource.data);
+      allow update:       if possede(resource.data) && possede(request.resource.data);
+    }
+
+    // --- Groupes de dépenses partagées ---
+    match /groups/{gid} {
+      // Lire : seulement les membres.
+      allow read: if estConnecte() && request.auth.uid in resource.data.memberIds;
+      // Créer : le créateur est propriétaire ET membre.
+      allow create: if estConnecte()
+        && request.resource.data.ownerId == request.auth.uid
+        && request.auth.uid in request.resource.data.memberIds;
+      // Modifier (ex. ajouter un membre) : un membre, sans changer le propriétaire.
+      allow update: if estConnecte()
+        && request.auth.uid in resource.data.memberIds
+        && request.resource.data.ownerId == resource.data.ownerId;
+      // Supprimer : seulement le propriétaire.
+      allow delete: if estConnecte() && resource.data.ownerId == request.auth.uid;
+
+      // Dépenses du groupe (sous-collection) : réservées aux membres.
+      match /expenses/{eid} {
+        allow read, update, delete: if estMembre(gid);
+        allow create: if estMembre(gid)
+          && request.resource.data.createdBy == request.auth.uid;
+      }
+    }
+  }
+}

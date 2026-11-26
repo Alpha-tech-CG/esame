@@ -1,0 +1,201 @@
+/* ============================================================
+   responsive.css — Adaptations tablette et téléphone.
+   Sur mobile : la navigation du haut est remplacée par une
+   barre d'onglets flottante en bas de l'écran (icônes Lucide).
+   ============================================================ */
+
+/* Écran moyen : 5 liens dans la barre du haut -> icônes seulement */
+@media (max-width: 1060px) {
+  .nav .nav-label {
+    display: none;
+  }
+
+  .nav a {
+    padding: 0.55rem 0.7rem;
+  }
+}
+
+/* Pages Budgets / Groupes : une seule colonne */
+@media (max-width: 900px) {
+  .two-col,
+  .two-col.equal,
+  .groups-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tablette */
+@media (max-width: 860px) {
+  .budget-summary.four {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .page-hero h1 {
+    font-size: 2.5rem;
+  }
+}
+
+/* Téléphone */
+@media (max-width: 600px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .app-header {
+    padding: 0.75rem 0.75rem 0;
+  }
+
+  /* On cache les liens du haut (remplacés par la barre d'onglets) */
+  .nav-pill .nav {
+    display: none;
+  }
+
+  /* Le bouton Déconnexion devient un simple rond avec l'icône */
+  .nav-pill .btn-label {
+    display: none;
+  }
+
+  .nav-pill #logout-link {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .page-hero {
+    padding: 1.75rem 0 1.25rem;
+  }
+
+  .page-hero h1 {
+    font-size: 2.1rem;
+  }
+
+  .budget-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .budget-summary.four {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Cartes de chiffres compactes : icône à gauche, texte à droite */
+  .budget-summary:not(.four) .stat {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.9rem;
+    align-items: center;
+    padding: 1rem 1.1rem;
+  }
+
+  .budget-summary:not(.four) .stat-icon {
+    grid-row: span 2;
+    margin-bottom: 0;
+  }
+
+  .budget-summary {
+    gap: 0.75rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .form-row,
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+
+  .section-head {
+    flex-wrap: wrap;
+  }
+
+  /* Barre d'onglets flottante en bas, en forme de pilule */
+  .tabbar {
+    display: flex;
+    position: fixed;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom));
+    z-index: 20;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    padding: 0.4rem;
+  }
+
+  .tabbar a {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 0.45rem 0.15rem;
+    border-radius: 999px;
+    font-size: 0.66rem;
+    color: var(--text-muted);
+  }
+
+  .budget-input {
+    width: 110px;
+  }
+
+  .split-row .input {
+    width: 100px;
+  }
+
+  .tabbar a .lucide {
+    width: 20px;
+    height: 20px;
+  }
+
+  .tabbar a.active {
+    background: var(--color-dark);
+    color: #fff;
+  }
+
+  /* Espace en bas pour ne pas cacher le contenu sous la barre */
+  body {
+    padding-bottom: 6rem;
+  }
+
+  /* Les notifications s'affichent au-dessus de la barre d'onglets */
+  .toast-container {
+    bottom: calc(5.75rem + env(safe-area-inset-bottom));
+  }
+
+  /* Ligne de dépense sur 2 rangées : icône | texte | montant,
+     puis les boutons modifier/supprimer alignés à droite dessous */
+  .expense-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    column-gap: 0.75rem;
+    row-gap: 0.5rem;
+  }
+
+  .expense-actions {
+    grid-column: 2 / -1;
+    justify-content: flex-end;
+  }
+}
+
+/* Grand écran : formulaire et liste côte à côte (page Dépenses) */
+@media (min-width: 900px) {
+  .expenses-layout {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .expenses-layout > .card:first-child {
+    position: sticky;
+    top: 6rem;
+  }
+}

@@ -1,0 +1,16 @@
+# Fichiers personnels : à ne pas publier sur un dépôt public
+# - identifiants (mots de passe) des comptes de test
+COMPTE-DEMO.md
+# - notes de révision personnelles
+GUIDE-SOUTENANCE.md
+
+# Fichiers système / éditeur
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Outils
+node_modules/
+.vercel

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#4686fe" />
+  <title>Tableau de bord — BudgetShare</title>
+
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icons/icon-192.png" />
+  <!-- Police Geist (Google Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="./css/reset.css" />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <link rel="stylesheet" href="./css/responsive.css" />
+  <!-- Mise en page propre au tableau de bord -->
+  <link rel="stylesheet" href="./css/dashboard.css" />
+</head>
+<body class="dash-page">
+  <div class="dash-layout">
+
+    <!-- ===================== BARRE LATÉRALE ===================== -->
+    <aside class="sidebar">
+      <a class="brand" href="./dashboard.html">
+        <span class="brand-mark"><i data-lucide="wallet"></i></span>
+        <span class="brand-text">BudgetShare</span>
+      </a>
+
+      <nav class="side-nav">
+        <a href="./dashboard.html">
+          <span class="side-icon"><i data-lucide="layout-dashboard"></i></span>
+          <span class="side-label">Tableau de bord</span>
+        </a>
+        <a href="./expenses.html">
+          <span class="side-icon"><i data-lucide="receipt"></i></span>
+          <span class="side-label">Dépenses</span>
+        </a>
+        <a href="./budgets.html">
+          <span class="side-icon"><i data-lucide="target"></i></span>
+          <span class="side-label">Budgets</span>
+        </a>
+        <a href="./groups.html">
+          <span class="side-icon"><i data-lucide="users"></i></span>
+          <span class="side-label">Groupes</span>
+        </a>
+        <a href="./stats.html">
+          <span class="side-icon"><i data-lucide="chart-pie"></i></span>
+          <span class="side-label">Statistiques</span>
+        </a>
+      </nav>
+
+      <div class="side-bottom">
+        <a href="#" id="logout-link">
+          <span class="side-icon"><i data-lucide="log-out"></i></span>
+          <span class="side-label">Déconnexion</span>
+        </a>
+        <div class="side-user">
+          <span class="avatar" id="user-avatar">?</span>
+          <span class="side-user-name" id="user-name">…</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ===================== ZONE PRINCIPALE ===================== -->
+    <main class="dash-main">
+
+      <!-- En-tête : mois + petites cartes à droite -->
+      <header class="dash-header">
+        <div class="dash-title">
+          <a class="round-btn" href="./stats.html" title="Statistiques">
+            <i data-lucide="calendar"></i>
+          </a>
+          <div>
+            <h1 id="month-title">Mois en cours</h1>
+            <small>Budget mensuel<br />Mis à jour en direct</small>
+          </div>
+        </div>
+
+        <!-- Déconnexion accessible sur mobile (la barre latérale est cachée) -->
+        <a href="#" class="round-btn mobile-only" id="logout-mobile" title="Déconnexion">
+          <i data-lucide="log-out"></i>
+        </a>
+
+        <div class="dash-header-chips">
+          <div class="chip">
+            <span class="chip-icon"><i data-lucide="calendar"></i></span>
+            <div>
+              <div class="chip-label">Jours restants</div>
+              <div class="chip-value" id="val-days">—</div>
+            </div>
+          </div>
+          <div class="chip">
+            <span class="chip-icon"><i data-lucide="coins"></i></span>
+            <div>
+              <div class="chip-label">Dispo / jour</div>
+              <div class="chip-value" id="val-perday">—</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Zone centrale -->
+      <section class="dash-hero">
+        <div class="dash-left">
+
+          <!-- Budget / Dépensé / Restant -->
+          <div class="chips-row">
+            <div class="chip">
+              <span class="chip-icon"><i data-lucide="wallet"></i></span>
+              <div>
+                <div class="chip-label">Budget</div>
+                <div class="chip-value" id="val-budget">—</div>
+              </div>
+              <button class="chip-edit" id="edit-budget" title="Modifier le budget" aria-label="Modifier le budget">
+                <i data-lucide="pencil"></i>
+              </button>
+            </div>
+            <div class="chip">
+              <span class="chip-icon"><i data-lucide="trending-down"></i></span>
+              <div>
+                <div class="chip-label">Dépensé</div>
+                <div class="chip-value" id="val-depense">—</div>
+              </div>
+            </div>
+            <div class="chip">
+              <span class="chip-icon"><i data-lucide="piggy-bank"></i></span>
+              <div>
+                <div class="chip-label">Restant</div>
+                <div class="chip-value" id="val-restant">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Jauge du budget utilisé + catégories principales -->
+          <div class="usage-card">
+            <div class="usage-gauge">
+              <span class="status-pill" id="status-pill">Dans le budget</span>
+              <div class="gauge">
+                <svg viewBox="0 0 120 120" aria-hidden="true">
+                  <circle class="gauge-track" cx="60" cy="60" r="50" />
+                  <circle class="gauge-fill" id="gauge-fill" cx="60" cy="60" r="50"
+                          stroke-dasharray="314.16" stroke-dashoffset="314.16" />
+                </svg>
+                <div class="gauge-value"><div id="gauge-value">0<span>%</span></div></div>
+              </div>
+              <span class="gauge-caption">du budget utilisé</span>
+            </div>
+            <div class="cat-tiles" id="cat-tiles">
+              <!-- rempli par dashboard.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Message d'analyse + ajout rapide -->
+        <div class="dash-right">
+          <div class="dash-advice">
+            <p id="advice-text">Chargement de votre budget…</p>
+            <a class="btn btn-white" id="advice-btn" href="./expenses.html">Voir les dépenses</a>
+          </div>
+
+          <form class="quick-add" id="quick-add">
+            <span class="quick-icon"><i data-lucide="sparkles"></i></span>
+            <input type="text" id="quick-input" autocomplete="off"
+                   placeholder="Ajout rapide : « 12,50 Cinéma »" aria-label="Ajout rapide d'une dépense" />
+            <button type="submit" title="Ajouter" aria-label="Ajouter la dépense">
+              <i data-lucide="send"></i>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Rangée du bas : 3 cartes -->
+      <section class="dash-bottom">
+
+        <!-- 1. Répartition par catégorie (barres segmentées) -->
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Par catégorie</div>
+              <div class="panel-sub">Part des dépenses</div>
+            </div>
+            <div class="toggle" id="cat-toggle">
+              <button type="button" class="on" data-range="month">Ce mois</button>
+              <button type="button" data-range="week">7 jours</button>
+            </div>
+          </div>
+          <div id="cat-bars"></div>
+        </div>
+
+        <!-- 2. Comparaison des semaines (cercles) -->
+        <div class="panel dark">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Semaines</div>
+              <div class="panel-sub">Total dépensé par semaine</div>
+            </div>
+            <a class="round-link" href="./stats.html" title="Voir les statistiques">
+              <i data-lucide="arrow-up-right"></i>
+            </a>
+          </div>
+          <div class="bubbles" id="bubbles"></div>
+        </div>
+
+        <!-- 3. Courbe des dépenses par jour -->
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Par jour</div>
+              <div class="panel-sub" id="trend-sub">7 derniers jours</div>
+            </div>
+            <div class="toggle" id="trend-toggle">
+              <button type="button" class="on" data-days="7">7 jours</button>
+              <button type="button" data-days="30">30 jours</button>
+            </div>
+          </div>
+          <span class="chart-note" id="trend-max"><i data-lucide="trending-up"></i>—</span>
+          <div class="chart-box">
+            <canvas id="chart-daily"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dernières dépenses -->
+      <section class="panel wide">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Dernières dépenses</div>
+            <div class="panel-sub">Ce mois-ci</div>
+          </div>
+          <a class="btn btn-sm btn-dark" href="./expenses.html"><i data-lucide="plus"></i>Ajouter</a>
+        </div>
+        <div class="expense-list" id="recent-list">
+          <div class="empty">Chargement…</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Fenêtre pour définir / modifier le budget du mois -->
+  <dialog class="budget-dialog" id="budget-dialog">
+    <h3 class="card-title"><i data-lucide="banknote"></i>Budget du mois</h3>
+    <form id="budget-form">
+      <div class="form-group">
+        <label for="budget-amount">Montant (€)</label>
+        <input class="input" type="number" id="budget-amount" step="0.01" min="0"
+               placeholder="1200" required />
+      </div>
+      <div class="dialog-actions">
+        <button type="button" class="btn" id="budget-cancel">Annuler</button>
+        <button type="submit" class="btn btn-dark"><i data-lucide="check"></i>Enregistrer</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Barre d'onglets (mobile) -->
+  <nav class="tabbar">
+    <a href="./dashboard.html"><i data-lucide="house"></i>Accueil</a>
+    <a href="./expenses.html"><i data-lucide="receipt"></i>Dépenses</a>
+    <a href="./budgets.html"><i data-lucide="target"></i>Budgets</a>
+    <a href="./groups.html"><i data-lucide="users"></i>Groupes</a>
+    <a href="./stats.html"><i data-lucide="chart-pie"></i>Stats</a>
+  </nav>
+
+  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <!-- Icônes Lucide (version figée, comme recommandé par lucide.dev) -->
+  <script src="https://unpkg.com/lucide@1.80.0/dist/umd/lucide.min.js"></script>
+  <script src="./js/config.js"></script>
+  <script src="./js/utils.js"></script>
+  <script src="./js/categories.js"></script>
+  <script src="./js/tags.js"></script>
+  <script src="./js/filters.js"></script>
+  <script src="./js/budget.js"></script>
+  <script src="./js/expenses.js"></script>
+  <script src="./js/alerts.js"></script>
+  <script src="./js/dashboard.js"></script>
+</body>
+</html>

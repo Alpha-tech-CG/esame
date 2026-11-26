@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#bcd8f2" />
+  <title>Groupes — BudgetShare</title>
+
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="./css/reset.css" />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <link rel="stylesheet" href="./css/responsive.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="nav-pill">
+      <a class="brand" href="./dashboard.html">
+        <span class="brand-mark"><i data-lucide="wallet"></i></span>
+        BudgetShare
+      </a>
+      <nav class="nav">
+        <a href="./dashboard.html" title="Tableau de bord"><i data-lucide="layout-dashboard"></i><span class="nav-label">Tableau de bord</span></a>
+        <a href="./expenses.html" title="Dépenses"><i data-lucide="receipt"></i><span class="nav-label">Dépenses</span></a>
+        <a href="./budgets.html" title="Budgets"><i data-lucide="target"></i><span class="nav-label">Budgets</span></a>
+        <a href="./groups.html" title="Groupes"><i data-lucide="users"></i><span class="nav-label">Groupes</span></a>
+        <a href="./stats.html" title="Statistiques"><i data-lucide="chart-pie"></i><span class="nav-label">Statistiques</span></a>
+      </nav>
+      <a href="#" id="logout-link" class="btn btn-dark btn-sm" title="Déconnexion">
+        <i data-lucide="log-out"></i><span class="btn-label">Déconnexion</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="page-hero">
+      <span class="eyebrow"><i data-lucide="users"></i>Groupes</span>
+      <h1>Dépenses partagées</h1>
+      <p class="lead">Colocation, couple, voyage : partagez des dépenses et voyez qui doit combien à qui.</p>
+    </section>
+
+    <div class="groups-layout">
+
+      <!-- ===== Colonne gauche : mes groupes ===== -->
+      <aside class="card">
+        <h3 class="card-title"><i data-lucide="users"></i>Mes groupes</h3>
+        <div class="group-list" id="group-list">
+          <div class="empty">Chargement…</div>
+        </div>
+        <form id="create-group-form" class="inline-form">
+          <input class="input" id="group-name" placeholder="Nouveau groupe (ex. Coloc)" maxlength="60" required />
+          <button class="btn btn-dark btn-icon" type="submit" title="Créer le groupe" aria-label="Créer le groupe">
+            <i data-lucide="plus"></i>
+          </button>
+        </form>
+      </aside>
+
+      <!-- ===== Colonne droite : détail du groupe choisi ===== -->
+      <div>
+        <section class="card" id="group-empty">
+          <div class="empty">
+            <i data-lucide="users"></i>
+            Créez un groupe ou sélectionnez-en un pour commencer.
+          </div>
+        </section>
+
+        <div id="group-detail" class="stack hidden">
+
+          <!-- Nom + membres -->
+          <section class="card">
+            <div class="section-head">
+              <h2 id="group-title">—</h2>
+              <button class="btn btn-sm btn-danger hidden" id="delete-group" type="button">
+                <i data-lucide="trash-2"></i>Supprimer le groupe
+              </button>
+            </div>
+            <div class="member-chips" id="member-chips"></div>
+            <form id="add-member-form" class="inline-form" style="margin-top:1rem">
+              <div class="input-wrap" style="flex:1">
+                <i data-lucide="mail"></i>
+                <input class="input" type="email" id="member-email" placeholder="E-mail d'un membre à ajouter" required />
+              </div>
+              <button class="btn btn-dark" type="submit"><i data-lucide="user-plus"></i>Ajouter</button>
+            </form>
+            <p class="panel-sub" style="margin-top:0.5rem">
+              La personne doit avoir un compte BudgetShare et s'être connectée au moins une fois.
+            </p>
+          </section>
+
+          <div class="two-col equal">
+            <!-- Soldes -->
+            <section class="card">
+              <h3 class="card-title"><i data-lucide="scale"></i>Qui doit combien</h3>
+              <div id="balances"></div>
+              <div id="settlements"></div>
+            </section>
+
+            <!-- Nouvelle dépense partagée -->
+            <section class="card">
+              <h3 class="card-title"><i data-lucide="split"></i>Nouvelle dépense partagée</h3>
+              <form id="group-expense-form">
+                <div class="grid-2">
+                  <div class="form-group">
+                    <label for="ge-amount">Montant (€)</label>
+                    <input class="input" type="number" id="ge-amount" step="0.01" min="0.01" placeholder="60" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="ge-date">Date</label>
+                    <input class="input" type="date" id="ge-date" required />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="ge-desc">Description</label>
+                  <input class="input" type="text" id="ge-desc" placeholder="Courses de la semaine" maxlength="80" />
+                </div>
+                <div class="form-group">
+                  <label for="ge-payer">Payé par</label>
+                  <select class="select" id="ge-payer"></select>
+                </div>
+
+                <!-- Choix du mode de répartition -->
+                <div class="seg-toggle" role="radiogroup" aria-label="Répartition">
+                  <label><input type="radio" name="split" value="equal" checked /><span>Parts égales</span></label>
+                  <label><input type="radio" name="split" value="custom" /><span>Parts personnalisées</span></label>
+                </div>
+                <div id="split-box"></div>
+
+                <button type="submit" class="btn btn-dark btn-block"><i data-lucide="plus"></i>Ajouter la dépense</button>
+              </form>
+            </section>
+          </div>
+
+          <!-- Liste des dépenses du groupe -->
+          <section class="card">
+            <div class="section-head">
+              <h2><i data-lucide="list"></i>Dépenses du groupe</h2>
+              <select class="select" id="payer-filter" style="width:auto" aria-label="Filtrer par membre">
+                <option value="">Tous les membres</option>
+              </select>
+            </div>
+            <div class="expense-list" id="group-expenses"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <nav class="tabbar">
+    <a href="./dashboard.html"><i data-lucide="house"></i>Accueil</a>
+    <a href="./expenses.html"><i data-lucide="receipt"></i>Dépenses</a>
+    <a href="./budgets.html"><i data-lucide="target"></i>Budgets</a>
+    <a href="./groups.html"><i data-lucide="users"></i>Groupes</a>
+    <a href="./stats.html"><i data-lucide="chart-pie"></i>Stats</a>
+  </nav>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script src="https://unpkg.com/lucide@1.80.0/dist/umd/lucide.min.js"></script>
+  <script src="./js/config.js"></script>
+  <script src="./js/utils.js"></script>
+  <script src="./js/groups.js"></script>
+</body>
+</html>

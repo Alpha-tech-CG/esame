@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#bcd8f2" />
+  <title>Dépenses — BudgetShare</title>
+
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="./css/reset.css" />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <link rel="stylesheet" href="./css/responsive.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="nav-pill">
+      <a class="brand" href="./dashboard.html">
+        <span class="brand-mark"><i data-lucide="wallet"></i></span>
+        BudgetShare
+      </a>
+      <nav class="nav">
+        <a href="./dashboard.html" title="Tableau de bord"><i data-lucide="layout-dashboard"></i><span class="nav-label">Tableau de bord</span></a>
+        <a href="./expenses.html" title="Dépenses"><i data-lucide="receipt"></i><span class="nav-label">Dépenses</span></a>
+        <a href="./budgets.html" title="Budgets"><i data-lucide="target"></i><span class="nav-label">Budgets</span></a>
+        <a href="./groups.html" title="Groupes"><i data-lucide="users"></i><span class="nav-label">Groupes</span></a>
+        <a href="./stats.html" title="Statistiques"><i data-lucide="chart-pie"></i><span class="nav-label">Statistiques</span></a>
+      </nav>
+      <a href="#" id="logout-link" class="btn btn-dark btn-sm" title="Déconnexion">
+        <i data-lucide="log-out"></i><span class="btn-label">Déconnexion</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="page-hero">
+      <span class="eyebrow"><i data-lucide="receipt"></i>Dépenses</span>
+      <h1>Mes dépenses</h1>
+      <p class="lead">Ajoutez, modifiez et filtrez vos dépenses par date, catégorie ou tag.</p>
+    </section>
+
+    <div class="expenses-layout">
+
+      <!-- ===== Colonne gauche : formulaire ===== -->
+      <section class="card">
+        <h3 class="card-title" id="form-title">Nouvelle dépense</h3>
+        <form id="expense-form">
+          <div class="form-group">
+            <label for="exp-amount">Montant (€)</label>
+            <input class="input" type="number" id="exp-amount" step="0.01" min="0"
+                   placeholder="45.20" required />
+          </div>
+
+          <div class="form-group">
+            <label for="exp-desc">Description</label>
+            <input class="input" type="text" id="exp-desc"
+                   placeholder="Courses Carrefour" />
+          </div>
+
+          <div class="form-group">
+            <label for="exp-date">Date</label>
+            <input class="input" type="date" id="exp-date" required />
+          </div>
+
+          <div class="form-group">
+            <label for="exp-category">
+              Catégorie
+              <button type="button" id="add-category" class="btn btn-sm">
+                <i data-lucide="folder-plus"></i>Nouvelle
+              </button>
+            </label>
+            <select class="select" id="exp-category"></select>
+          </div>
+
+          <div class="form-group">
+            <label for="exp-tags">Tags (séparés par des virgules)</label>
+            <input class="input" type="text" id="exp-tags"
+                   placeholder="alimentation, promo" />
+          </div>
+
+          <button type="submit" class="btn btn-dark btn-block" id="submit-expense">
+            Ajouter
+          </button>
+          <button type="button" class="btn btn-block hidden" id="cancel-edit"
+                  style="margin-top:0.5rem">
+            Annuler
+          </button>
+        </form>
+      </section>
+
+      <!-- ===== Colonne droite : filtres + liste ===== -->
+      <section>
+        <div class="card" style="margin-bottom:1rem">
+          <h3 class="card-title"><i data-lucide="funnel"></i>Filtres</h3>
+          <div class="filters">
+            <div class="form-group">
+              <label for="filter-from">Du</label>
+              <input class="input" type="date" id="filter-from" />
+            </div>
+            <div class="form-group">
+              <label for="filter-to">Au</label>
+              <input class="input" type="date" id="filter-to" />
+            </div>
+            <div class="form-group">
+              <label for="filter-category">Catégorie</label>
+              <select class="select" id="filter-category">
+                <option value="">Toutes catégories</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="filter-tag">Tag</label>
+              <input class="input" type="text" id="filter-tag" placeholder="promo" />
+            </div>
+          </div>
+          <div class="filter-actions">
+            <button class="btn btn-dark" id="apply-filters"><i data-lucide="search"></i>Filtrer</button>
+            <button class="btn" id="clear-filters"><i data-lucide="rotate-ccw"></i>Réinitialiser</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-head">
+            <h2><i data-lucide="list"></i>Liste</h2>
+            <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap">
+              <span class="progress-text" id="list-total" style="margin:0"></span>
+              <button class="btn btn-sm" id="export-csv" title="Exporter la liste filtrée en CSV">
+                <i data-lucide="download"></i>Export CSV
+              </button>
+            </div>
+          </div>
+          <div class="expense-list" id="expense-list">
+            <div class="empty">Chargement…</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <nav class="tabbar">
+    <a href="./dashboard.html"><i data-lucide="house"></i>Accueil</a>
+    <a href="./expenses.html"><i data-lucide="receipt"></i>Dépenses</a>
+    <a href="./budgets.html"><i data-lucide="target"></i>Budgets</a>
+    <a href="./groups.html"><i data-lucide="users"></i>Groupes</a>
+    <a href="./stats.html"><i data-lucide="chart-pie"></i>Stats</a>
+  </nav>
+
+  <!-- Scripts (l'ordre compte : Firebase puis config avant les autres) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script src="https://unpkg.com/lucide@1.80.0/dist/umd/lucide.min.js"></script>
+  <script src="./js/config.js"></script>
+  <script src="./js/utils.js"></script>
+  <script src="./js/categories.js"></script>
+  <script src="./js/tags.js"></script>
+  <script src="./js/filters.js"></script>
+  <script src="./js/budget.js"></script>
+  <script src="./js/expenses.js"></script>
+  <script src="./js/export.js"></script>
+
+  <script>
+    // Déconnexion (la logique de la page est dans expenses.js).
+    document.getElementById("logout-link").addEventListener("click", (e) => {
+      e.preventDefault();
+      logout();
+    });
+    registerServiceWorker();
+  </script>
+</body>
+</html>

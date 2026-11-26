@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#bcd8f2" />
+  <title>Connexion — BudgetShare</title>
+
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="./css/reset.css" />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <link rel="stylesheet" href="./css/responsive.css" />
+</head>
+<body>
+  <main class="auth-wrapper">
+    <div class="auth-card card">
+      <div class="auth-logo">
+        <span class="brand-mark lg"><i data-lucide="wallet"></i></span>
+        <h1>BudgetShare</h1>
+        <p>Suivez chaque euro, seul ou à plusieurs.</p>
+      </div>
+
+      <!-- Zone des messages (erreurs / succès) -->
+      <div id="message" class="message hidden"></div>
+
+      <!-- Formulaire unique utilisé pour connexion ET inscription.
+           Le champ « Nom complet » ne s'affiche qu'en mode inscription. -->
+      <form id="auth-form">
+        <div class="form-group hidden" id="name-group">
+          <label for="full_name">Nom complet</label>
+          <div class="input-wrap">
+            <i data-lucide="user"></i>
+            <input class="input" type="text" id="full_name" autocomplete="name"
+                   placeholder="Jean Dupont" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Adresse e-mail</label>
+          <div class="input-wrap">
+            <i data-lucide="mail"></i>
+            <input class="input" type="email" id="email" required
+                   autocomplete="email" placeholder="jean@exemple.fr" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <div class="input-wrap">
+            <i data-lucide="lock"></i>
+            <input class="input" type="password" id="password" required
+                   autocomplete="current-password" minlength="6"
+                   placeholder="Au moins 6 caractères" />
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-dark btn-block" id="submit-btn">
+          Se connecter
+        </button>
+      </form>
+
+      <!-- Lien pour basculer entre connexion et inscription -->
+      <p class="auth-switch">
+        <span id="switch-text">Pas encore de compte ?</span>
+        <button type="button" id="switch-btn">Créer un compte</button>
+      </p>
+    </div>
+  </main>
+
+  <!-- Scripts : Firebase (app + auth + firestore) puis l'application -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script src="https://unpkg.com/lucide@1.80.0/dist/umd/lucide.min.js"></script>
+  <script src="./js/config.js"></script>
+  <script src="./js/utils.js"></script>
+  <script src="./js/auth.js"></script>
+</body>
+</html>

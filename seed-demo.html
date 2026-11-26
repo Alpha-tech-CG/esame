@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Données de démo — BudgetShare</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="./css/reset.css" />
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <!--
+    Page utilitaire pour insérer des données de démonstration dans
+    Firestore. À utiliser APRÈS t'être connecté dans l'application.
+    Firestore ne s'alimente pas en SQL : on écrit donc les données
+    en JavaScript, pour l'utilisateur actuellement connecté.
+  -->
+  <main class="auth-wrapper">
+    <div class="auth-card card">
+      <div class="auth-logo">
+        <span class="brand-mark lg"><i data-lucide="sparkles"></i></span>
+        <h1>Données de démo</h1>
+        <p id="who">Vérification de la connexion…</p>
+      </div>
+
+      <div id="message" class="message hidden"></div>
+
+      <button class="btn btn-dark btn-block" id="seed-btn" disabled>
+        Insérer les données de démonstration
+      </button>
+      <p class="auth-switch">
+        <a href="./dashboard.html">← Retour au tableau de bord</a>
+      </p>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script src="https://unpkg.com/lucide@1.80.0/dist/umd/lucide.min.js"></script>
+  <script src="./js/config.js"></script>
+  <script src="./js/utils.js"></script>
+  <script>
+    const btn = document.getElementById("seed-btn");
+
+    // On attend d'être connecté pour autoriser l'insertion.
+    window.auth.onAuthStateChanged((user) => {
+      if (!user) {
+        document.getElementById("who").textContent = "Tu dois d'abord te connecter.";
+        showMessage("Connecte-toi dans l'application, puis reviens ici.", "error");
+        return;
+      }
+      document.getElementById("who").textContent = "Connecté : " + user.email;
+      btn.disabled = false;
+    });
+
+    btn.addEventListener("click", async () => {
+      const user = currentUser();
+      if (!user) return;
+      btn.disabled = true;
+      btn.textContent = "Insertion…";
+
+      const uid = user.uid;
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth() + 1;
+      // Fabrique une date "AAAA-MM-JJ" pour un jour donné du mois courant.
+      const d = (jour) => `${year}-${String(month).padStart(2, "0")}-${String(jour).padStart(2, "0")}`;
+      const stamp = firebase.firestore.FieldValue.serverTimestamp();
+
+      try {
+        // --- Catégories ---
+        const cats = {
+          alim: "Alimentation", transport: "Transport",
+          loisirs: "Loisirs", logement: "Logement",
+        };
+        const colors = {
+          alim: "#10b981", transport: "#f59e0b",
+          loisirs: "#8b5cf6", logement: "#2563eb",
+        };
+        const catIds = {};
+        for (const key of Object.keys(cats)) {
+          const ref = await db.collection("categories").add({
+            userId: uid, name: cats[key], color: colors[key], created_at: stamp,
+          });
+          catIds[key] = ref.id;
+        }
+
+        // --- Budget du mois en cours ---
+        await db.collection("budgets").doc(`${uid}_${year}_${month}`).set({
+          userId: uid, amount: 1200, budget_month: month, budget_year: year,
+        });
+
+        // --- Dépenses ---
+        const depenses = [
+          { amount: 45.20, description: "Courses Carrefour", expense_date: d(21), category_id: catIds.alim, tags: ["courses", "promo"] },
+          { amount: 2.50, description: "Bus", expense_date: d(20), category_id: catIds.transport, tags: [] },
+          { amount: 12.00, description: "Cinéma", expense_date: d(19), category_id: catIds.loisirs, tags: [] },
+          { amount: 650.00, description: "Loyer", expense_date: d(2), category_id: catIds.logement, tags: [] },
+          { amount: 33.90, description: "Essence", expense_date: d(10), category_id: catIds.transport, tags: ["pro"] },
+          { amount: 18.40, description: "Boulangerie", expense_date: d(14), category_id: catIds.alim, tags: ["courses"] },
+          { amount: 59.99, description: "Abonnement salle de sport", expense_date: d(5), category_id: catIds.loisirs, tags: [] },
+        ];
+        for (const dep of depenses) {
+          await db.collection("expenses").add({ userId: uid, created_at: stamp, ...dep });
+        }
+
+        showMessage("Données insérées ! Retourne au tableau de bord.", "success");
+        btn.textContent = "Terminé";
+      } catch (err) {
+        showMessage("Erreur : " + err.message, "error");
+        btn.disabled = false;
+        btn.textContent = "Réessayer";
+      }
+    });
+  </script>
+</body>
+</html>

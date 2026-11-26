@@ -1,0 +1,60 @@
+/* ============================================================
+   reset.css
+   Remise à zéro des styles par défaut du navigateur pour avoir
+   une base identique sur tous les appareils.
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* la largeur inclut padding + bordure */
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%; /* évite le zoom auto sur iOS */
+  overflow-x: clip; /* pas de défilement horizontal parasite sur mobile */
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit; /* les champs héritent de la police du body */
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
